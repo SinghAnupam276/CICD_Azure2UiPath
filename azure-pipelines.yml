@@ -48,12 +48,12 @@ stages:
               folderName: 'Shared'
 
   - stage: DeployDEV
-    displayName: Deploy build artifact to DEV
+    displayName: Deploy DEV
 
     condition: succeeded()
     jobs:
       - deployment: deployDEV
-        displayName: Deploy package to DEV Orchestrator
+        displayName: Deploy  to DEV 
 
         environment: DEV
         strategy:
