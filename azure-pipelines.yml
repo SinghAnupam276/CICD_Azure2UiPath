@@ -10,7 +10,7 @@ variables:
   value: true
 
 pool:
-  vmImage: 'windows-latest'
+  Anupam_Singh
 stages:
   - stage: Build
     displayName: Build Package
@@ -28,42 +28,3 @@ stages:
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: drop
 
-  
-
-       
-      
-
-  - stage: TestDEV
-    displayName:  Test Cases
-    condition: succeeded()
-    jobs:
-      - job: TestDEV
-
-        steps:
-          - task: UiPathTest@2
-            inputs:
-              testTarget: 'TestSet'
-              orchestratorConnection: 'Az2DefTent_Conn'
-              testSet: 'CICD_TestSet'
-              folderName: 'Shared'
-
-  - stage: DeployDEV
-    displayName: Deploy DEV
-
-    condition: succeeded()
-    jobs:
-      - deployment: deployDEV
-        displayName: Deploy  to DEV 
-
-        environment: DEV
-        strategy:
-         runOnce:
-          deploy:
-           steps:
-            - task: UiPathDeploy@2
-              inputs:
-                orchestratorConnection: 'AZ2UATOrch_Conn'
-                packagesPath: '$(Build.ArtifactStagingDirectory)'
-                folderName: 'Shared'
-                entryPoints: 'Main.xaml'
-                traceLevel: 'Information'
