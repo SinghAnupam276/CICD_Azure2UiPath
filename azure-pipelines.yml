@@ -5,10 +5,12 @@
 
 trigger:
 - main
+variables:
+- name: agent.preferPowerShallOnContainer
+  value: true
 
 pool:
-  Anupam_Singh
-
+  vmImage: 'windows-latest'
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
