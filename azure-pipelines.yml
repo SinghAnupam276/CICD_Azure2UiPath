@@ -28,11 +28,7 @@ stages:
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: drop
 
-  - stage: Run Process Flow
-    displayName: Run Process
-    condition: succeeded()
-    jobs: 
-    - job: RunPackage
+  
 
        
       
