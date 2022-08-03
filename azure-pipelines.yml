@@ -11,18 +11,63 @@ variables:
 
 pool:
   vmImage: 'windows-latest'
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+  - stage: Build
+    displayName: Build Package
+    jobs: 
+    - job: BuildPackage
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-- task: UiPathTest@2
-  inputs:
-    testTarget: 'TestSet'
-    orchestratorConnection: 'Az2DefTent_Conn'
-    testSet: 'CICD_TestSet'
-    folderName: 'Shared'
-    traceLevel: 'Information'
+      steps:    
+      - task: UiPathPack@2
+        inputs:
+          versionType: 'AutoVersion'
+          projectJsonPath: '$(Build.SourcesDirectory)\project.json'
+          outputType: 'Process'
+          orchestratorConnection: 'Test_Orch_Devopps'
+          outputPath: '$(Build.ArtifactStagingDirectory)'
+      - publish: $(Build.ArtifactStagingDirectory)
+        artifact: drop
+
+  - stage: Run Process Flow
+    displayName: Run Process
+    condition: succeeded()
+    jobs: 
+    - job: RunPackage
+
+       
+      
+
+  - stage: TestDEV
+    displayName:  Test Cases
+    condition: succeeded()
+    jobs:
+      - job: TestDEV
+
+        steps:
+          - task: UiPathTest@2
+            inputs:
+              testTarget: 'TestSet'
+              orchestratorConnection: 'Test_Orch_Devopps'
+              testSet: 'test1'
+              folderName: 'Training'
+
+  - stage: DeployDEV
+    displayName: Deploy build artifact to DEV
+
+    condition: succeeded()
+    jobs:
+      - deployment: deployDEV
+        displayName: Deploy package to DEV Orchestrator
+
+        environment: DEV
+        strategy:
+         runOnce:
+          deploy:
+           steps:
+            - task: UiPathDeploy@2
+              inputs:
+                orchestratorConnection: 'UAT Connection'
+                packagesPath: '$(Build.ArtifactStagingDirectory)\SIR'
+                folderName: 'Shared'
+                entryPoints: 'Main.xaml'
+                traceLevel: 'Information'
