@@ -23,7 +23,7 @@ stages:
           versionType: 'AutoVersion'
           projectJsonPath: '$(Build.SourcesDirectory)\project.json'
           outputType: 'Process'
-          orchestratorConnection: 'Test_Orch_Devopps'
+          orchestratorConnection: 'Az2DefTent_Conn'
           outputPath: '$(Build.ArtifactStagingDirectory)'
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: drop
@@ -43,9 +43,9 @@ stages:
           - task: UiPathTest@2
             inputs:
               testTarget: 'TestSet'
-              orchestratorConnection: 'Test_Orch_Devopps'
-              testSet: 'test1'
-              folderName: 'Training'
+              orchestratorConnection: 'Az2DefTent_Conn'
+              testSet: 'CICD_TestSet'
+              folderName: 'Shared'
 
   - stage: DeployDEV
     displayName: Deploy build artifact to DEV
@@ -62,8 +62,8 @@ stages:
            steps:
             - task: UiPathDeploy@2
               inputs:
-                orchestratorConnection: 'UAT Connection'
-                packagesPath: '$(Build.ArtifactStagingDirectory)\SIR'
+                orchestratorConnection: 'AZ2UATOrch_Conn'
+                packagesPath: '$(Build.ArtifactStagingDirectory)'
                 folderName: 'Shared'
                 entryPoints: 'Main.xaml'
                 traceLevel: 'Information'
