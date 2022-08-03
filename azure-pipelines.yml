@@ -6,7 +6,7 @@
 trigger:
 - main
 variables:
-- name: agent.preferPowerShallOnContainer
+- name: CICD_VarGroup
   value: true
 
 pool:
