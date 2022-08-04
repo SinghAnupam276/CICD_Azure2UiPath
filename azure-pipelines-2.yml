@@ -15,19 +15,7 @@ pool:
   vmImage: 'windows-latest'
   
 stages:
-    - stage: RunProcessFlow
-      displayName: Run Process
-      condition: succeeded()
-      jobs: 
-      - job: RunPackage
-        steps:
-        - task: UiPathRunJob@2
-          inputs:
-            orchestratorConnection: 'Az2DefTent_Conn'
-            processName: 'CICD_Azure2UiPath'
-            folderName: 'Shared'
-            jobType: 'Unattended'
-            traceLevel: 'Information'
+
 
 
     - stage: TestDEV
